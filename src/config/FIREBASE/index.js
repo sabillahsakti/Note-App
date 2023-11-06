@@ -4,12 +4,12 @@ import 'firebase/compat/firestore';
 import "firebase/compat/database"
 
 firebase.initializeApp({
-    apiKey: "AIzaSyAi6O2pSYAIywZi4pEcgrSBLZRJBRlhCak",
-    authDomain: "pabsi-66609.firebaseapp.com",
-    projectId: "pabsi-66609",
-    storageBucket: "pabsi-66609.appspot.com",
-    messagingSenderId: "202678796413",
-    appId: "1:202678796413:web:1f2c3a2208cd0ed683f114"
+    apiKey: "AIzaSyAi6O2pSYAIywxxxxxx",
+    authDomain: "xxxxx.firebaseapp.com",
+    projectId: "xxxx-66609",
+    storageBucket: "xxxx.appspot.com",
+    messagingSenderId: "2026787xxxxx",
+    appId: "1:202678796413:web:1f2c3a2208cxxxx"
 })
 
 const FIREBASE = firebase;
