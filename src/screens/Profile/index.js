@@ -1,22 +1,20 @@
-import React, { Component } from 'react'
-import { StyleSheet, View, Text, Image } from "react-native";
-import { Button } from '../../components'
-import { clearStorage, getData } from '../../utils';
-import FIREBASE from '../../config/FIREBASE';
-
-
+import React, { Component } from "react";
+import { Box, Text, Image, VStack } from "@gluestack-ui/themed";
+import { Button } from "../../components";
+import { clearStorage, getData } from "../../utils";
+import FIREBASE from "../../config/FIREBASE";
 
 export class Profile extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       profile: false,
-    }
+    };
   }
 
   componentDidMount() {
-    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+    this._unsubscribe = this.props.navigation.addListener("focus", () => {
       this.getUserData();
     });
   }
@@ -26,118 +24,70 @@ export class Profile extends Component {
   }
 
   getUserData = () => {
-    getData('user')
-      .then(res => {
-        const data = res;
-        if (data) {
-          console.log("isi data", data);
-          this.setState({
-            profile: data
-          })
-        } else {
-          // this.props.navigation.replace('Login')
-        }
-      })
-  }
+    getData("user").then((res) => {
+      const data = res;
+      if (data) {
+        console.log("isi data", data);
+        this.setState({
+          profile: data,
+        });
+      } else {
+        // this.props.navigation.replace('Login')
+      }
+    });
+  };
   onSubmit = (profile) => {
     if (profile) {
-      FIREBASE.auth().signOut().then(() => {
-        // Sign-out successful.
-        clearStorage();
-        this.props.navigation.replace('MainApp')
-      }).catch((error) => {
-        // An error happened.
-        alert(error)
-      });
+      FIREBASE.auth()
+        .signOut()
+        .then(() => {
+          // Sign-out successful.
+          clearStorage();
+          this.props.navigation.replace("MainApp");
+        })
+        .catch((error) => {
+          // An error happened.
+          alert(error);
+        });
     } else {
-      this.props.navigation.replace("Login")
+      this.props.navigation.replace("Login");
     }
-  }
+  };
   render() {
-    const { profile } = this.state
+    const { profile } = this.state;
     return (
-      <View style={styles.page}>
-        <View style={styles.container}>
-          <Image source={require('../../assets/images/avatar.png')} style={styles.foto} />
-          <Text style={styles.nama}>{profile.nama}</Text>
-          <View style={styles.profile}>
-            <Text style={styles.boldTextBlack}>Data Diri</Text>
-            <View>
-              <Text style={styles.titleDD}>Email</Text>
-              <Text style={styles.valueDD}>{profile.email}</Text>
-            </View>
-            <View>
-              <Text style={styles.titleDD}>No HP</Text>
-              <Text style={styles.valueDD}>{profile.nohp}</Text>
-            </View>
-            <View>
-              <Button
-                type="text"
-                title={profile ? "Logout" : "Login"}
-                padding={13}
-                onPress={() => this.onSubmit(profile)}
-              />
-            </View>
-          </View>
-        </View>
-      </View>
-    )
+      <Box mt={"$5"} mx={"$5"} backgroundColor="$blueGray100" flex={1} marginTop={"$20"} flexDirection="column">
+        <VStack backgroundColor="$blueGray100" width={"$full"} mb={"$10"}>
+          <Image source={require("../../assets/images/avatar.png")} size="2xl" borderRadius={"$full"} alignSelf="center" alt="Foto Profil" />
+          <Text fontSize={"$xl"} alignSelf="center" marginTop={"$5"} fontWeight="$bold">
+            {profile.nama}
+          </Text>
+        </VStack>
+        <Box flexDirection="column" bgColor="$white" shadowColor="$black" shadowOffset={{ width: 0, height: 2 }} shadowOpacity={"$25"} shadowRadius={"$3.5"} justifyContent="space-evenly" p={"$5"} borderRadius={"$xl"}>
+          <Text color="$black" fontWeight="$bold" fontSize={"$xl"}>
+            Data Diri
+          </Text>
+          <Box mt={"$5"}>
+            <Text color="$black" fontSize={"$sm"}>
+              Email
+            </Text>
+            <Text color="$black" fontSize={"$xl"} mt={"$2"}>
+              {profile.email}
+            </Text>
+          </Box>
+          <Box mt={"$5"}>
+            <Text color="$black" fontSize={"$sm"}>
+              Nomor Ponsel
+            </Text>
+            <Text color="$black" fontSize={"$xl"} mt={"$2"}>
+              {profile.nohp}
+            </Text>
+          </Box>
+        </Box>
+        <Button type="text" title={profile ? "Logout" : "Login"} padding={"$3"} onPress={() => this.onSubmit(profile)} />
+      </Box>
+    );
   }
 }
 
-export default Profile
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    width: '100%',
-  },
-  page: {
-    backgroundColor: 'white',
-    flex: 1,
-    justifyContent: 'center'
-  },
-  foto: {
-    width: 150,
-    height: 150,
-    borderRadius: 40,
-    alignSelf: 'center',
-
-  },
-  profile: {
-    marginTop: 10,
-    backgroundColor: 'white',
-    height: 200,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    elevation: 5,
-    marginHorizontal: 10,
-    borderRadius: 20,
-    padding: 20,
-    justifyContent: 'space-between'
-  },
-  nama: {
-    fontSize: 24,
-    alignSelf: 'center'
-  },
-  deskripsi: {
-    fontSize: 18,
-  },
-  boldTextBlack: {
-    color: 'black',
-    fontSize: 20,
-  },
-  titleDD: {
-    color: 'grey',
-    fontSize: 14
-  },
-  valueDD: {
-    fontSize: 14
-  }
-})
+export default Profile;

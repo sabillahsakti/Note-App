@@ -1,46 +1,26 @@
-import { StyleSheet, Text, TouchableOpacity } from 'react-native'
-import React from 'react'
-import { IconHome,
-    IconHomeActive,
-    IconProfile,
-    IconProfileActive,
-    IconAdd,
-    IconAddActive } from '../../../assets'
+import { Text, Pressable, Box } from "@gluestack-ui/themed";
+import React from "react";
+import { IconHome, IconHomeActive, IconProfile, IconProfileActive, IconAdd, IconAddActive } from "../../../assets";
 
 const TabItem = ({ isFocused, onPress, onLongPress, label }) => {
-    const Icon = () => {
-        if (label === "Home") {
-            return isFocused ? <IconHomeActive /> : <IconHome />
-        }
-        if (label === "Add") {
-            return isFocused ? <IconAddActive /> : <IconAdd />
-        }
-        if (label === "Profile") {
-            return isFocused ? <IconProfileActive /> : <IconProfile />
-        }
-        return <IconHome />
+  const Icon = () => {
+    if (label === "Home") {
+      return isFocused ? <IconHomeActive /> : <IconHome />;
     }
-    return (
-        <TouchableOpacity
-            onPress={onPress}
-            onLongPress={onLongPress}
-            style={styles.container}
-        >
-            <Icon />
-            <Text style={styles.text(isFocused)}>{label}</Text>
-        </TouchableOpacity>
-    )
-}
+    if (label === "Add") {
+      return isFocused ? <IconAddActive /> : <IconAdd />;
+    }
+    if (label === "Profile") {
+      return isFocused ? <IconProfileActive /> : <IconProfile />;
+    }
+    return <IconHome />;
+  };
+  return (
+    <Pressable onPress={onPress} onLongPress={onLongPress} alignItems="center" flexDirection="column" justifyContent="space-between">
+        <Icon />
+        <Text color={isFocused ? "$white" : "$warmGray500"} fontSize={"$md"} marginTop={"$2"}>{label}</Text>
+    </Pressable>
+  );
+};
 
-export default TabItem
-
-const styles = StyleSheet.create({
-    container : {
-        alignItems : 'center'
-    },
-    text : (isFocused) => ({
-        color: isFocused ? 'white' : 'grey',
-        fontSize : 11,
-        marginTop: 4
-    })
-})
+export default TabItem;

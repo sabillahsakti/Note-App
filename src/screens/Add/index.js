@@ -1,41 +1,67 @@
-import React, { Component } from 'react'
-import { SafeAreaView, StyleSheet, View, Alert, TextInput, Text, TouchableOpacity } from 'react-native'
-import { Button, Input, Pilihan } from '../../components'
-import { addNote, getNote } from '../../actions/AuthAction'
-import Modal from 'react-native-modal';
-
+import React, { Component } from "react";
+import {
+  Box,
+  FormControl,
+  HStack,
+  VStack,
+  Modal,
+  ModalBackdrop,
+  ModalBody,
+  FormControlLabel,
+  Text,
+  InputField,
+  Input as GlueInput,
+  Pressable,
+  Heading,
+  ModalHeader,
+  ModalContent,
+  ModalFooter,
+  Alert,
+  AlertIcon,
+  AlertText,
+  Center,
+} from "@gluestack-ui/themed";
+import { Button, Input, Pilihan } from "../../components";
+import { addNote, getNote } from "../../actions/AuthAction";
 
 export class Add extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
-      title: '',
-      content: '',
-      status: '',
-      caregory: '',
+      title: "",
+      content: "",
+      status: "",
+      caregory: "",
       categoryUser: [],
 
       //Buat Modal
       isModalVisible: false,
-      newCategory: '',
-    }
+      newCategory: "",
+
+      //Alert handling
+      showAlert: false,
+      alertMessage: "",
+    };
   }
 
   // Fungsi untuk menampilkan atau menyembunyikan modal
   toggleModal = () => {
     this.setState({ isModalVisible: !this.state.isModalVisible });
-  }
+  };
+
+  toggleAlert = (message) => {
+    this.setState({ showAlert: !this.state.showAlert, alertMessage: message });
+  };
 
   ubahStatus = (status) => {
     this.setState({
       status: status,
-    })
-
-  }
+    });
+  };
 
   async componentDidMount() {
-    this._unsubscribe = this.props.navigation.addListener('focus', async () => {
+    this._unsubscribe = this.props.navigation.addListener("focus", async () => {
       const notes = await getNote();
       const categories = notes.map((note) => note.category);
       const uniqueCategories = categories.filter((value, index, self) => {
@@ -50,165 +76,129 @@ export class Add extends Component {
   }
 
   onAddNote = async () => {
-    const { title, content, status, category } = this.state
+    const { title, content, status, category } = this.state;
     if (title && content && status && category) {
       const data = {
         title: title,
         content: content,
         status: status,
-        category: category
-      }
+        category: category,
+      };
 
-      console.log(data)
+      console.log(data);
       try {
         const user = await addNote(data);
-        this.props.navigation.replace('MainApp');
+        this.props.navigation.replace("MainApp");
       } catch (error) {
-        Alert.alert('Error', error.message);
+        console.log("Error", error.message);
+        this.toggleAlert(error.message);
       }
     } else {
-      Alert.alert('Error', 'Data tidak lengkap');
+      console.log("Error", "Data tidak lengkap");
+      this.toggleAlert("Data tidak lengkap");
     }
-  }
+  };
 
-  handleAddCategory = (newCategory) => {
-    this.setState((prevState) => ({
-      categoryUser: [...prevState.categoryUser, newCategory],
-    }));
-    this.toggleModal();
-  }
+  handleAddCategory = () => {
+    const { newCategory, categoryUser } = this.state;
+    if (newCategory.trim() !== "") {
+      this.setState((prevState) => ({
+        categoryUser: [...prevState.categoryUser, newCategory],
+        newCategory: "", // Reset newCategory after adding
+        isModalVisible: false, // Close modal after adding category
+      }));
+    }
+  };
+
   render() {
-    const { title, content, status, category, categoryUser } = this.state
-    const { isModalVisible, newCategory } = this.state;
-    console.log("Isi Category", categoryUser)
+    const { title, content, status, category, categoryUser } = this.state;
+    const { isModalVisible, newCategory, showAlert, alertMessage } = this.state;
+    console.log("Isi Category", categoryUser);
 
     return (
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.container}>
-          <Input
-            label="Title"
-            width={200}
-            value={title}
-            onChangeText={(title) => this.setState({ title })}
-          />
-          <Input
-            textarea={true}
-            label="Content"
-            value={content}
-            onChangeText={(content) => this.setState({ content })}
-          />
-          <Pilihan
-            label="Status"
-            selectedValue={status}
-            onValueChange={(status) => this.ubahStatus(status)}
-          />
-          <View style={styles.categoryContainer}>
-            <Pilihan
-              label="Category"
-              selectedValue={category}
-              datas={categoryUser}
-              width={200}
-              onValueChange={(selectedCategory) => this.setState({ category: selectedCategory })}
+      <Box flex={1} backgroundColor="$white">
+        <Box shadowColor="$black" shadowOffset={{ width: 0, height: 2 }} shadowOpacity={"$25"} shadowRadius={"$3.5"} elevation={"$5"} backgroundColor="$white" borderRadius={"$md"} mt={"$8"} mx={"$3"} px={"$3"} pt={"$2"}>
+          <Heading size="2xl" color="$black">
+            Add New Task!
+          </Heading>
+          <Text size="sm" color="$black" my={"$1"}>
+            Add your new task here!
+          </Text>
+          <FormControl>
+            <Input label={"Title"} width={"$full"} height={"$10"} onChangeText={(title) => this.setState({ title })} />
+            <Input textarea={true} label="Content" width={"$full"} height={"$32"} onChangeText={(content) => this.setState({ content })} />
+            <Pilihan label="Status" selectedValue={status} onValueChange={(status) => this.ubahStatus(status)} />
+            <Pilihan label="Category" selectedValue={category} datas={categoryUser} onValueChange={(selectedCategory) => this.setState({ category: selectedCategory })} />
+            <Button type="text" title="Add New Category" onPress={this.toggleModal} padding={10} />
+            <Button
+              type="text"
+              title="Save"
+              padding={10}
+              onPress={() => {
+                this.onAddNote();
+              }}
             />
-            <Button type="text" title="Add" padding={10} onPress={this.toggleModal} fontSize={14} />
-          </View>
-          <Button
-            type="text"
-            title="Save"
-            padding={10}
-            onPress={() => { this.onAddNote() }}
-          />
-        </View>
+          </FormControl>
+        </Box>
 
-        <Modal
-          isVisible={isModalVisible}
-          style={styles.modal} // Menentukan gaya modal
-          onBackdropPress={this.toggleModal} // Menutup modal saat area di luar modal diklik
-        >
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Add New Category</Text>
-            <TextInput
-              style={styles.modalInput}
-              placeholder="Category Name"
-              value={newCategory}
-              onChangeText={(text) => this.setState({ newCategory: text })}
-            />
-            <TouchableOpacity style={styles.modalButton} onPress={() => this.handleAddCategory(newCategory)}>
-              <Text style={styles.modalButtonText}>Add</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.modalButton} onPress={this.toggleModal}>
-              <Text style={styles.modalButtonText}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
+        <Modal isOpen={isModalVisible} onClose={this.toggleModal} finalFocusRef={this.btnRef}>
+          <ModalBackdrop />
+          <ModalContent backgroundColor="$white" padding={"$2"} borderRadius={"$lg"}>
+            <ModalHeader>
+              <VStack space="sm">
+                <Heading size="lg">Add New Category</Heading>
+                <Text size="sm">Having a lot of task must be needing categories too!</Text>
+              </VStack>
+            </ModalHeader>
+            <ModalBody>
+              <GlueInput>
+                <InputField role="form" placeholder="Category Name" value={newCategory} onChangeText={(text) => this.setState({ newCategory: text })} />
+              </GlueInput>
+            </ModalBody>
+            <ModalFooter>
+              <Box flex={1} flexDirection="column" justifyContent="space-evenly">
+                <Pressable
+                  backgroundColor="$blue500"
+                  p={"$2"}
+                  borderRadius={"$sm"}
+                  alignItems="center"
+                  onPress={this.handleAddCategory} // Trigger category addition
+                >
+                  <Text color="$white" fontWeight="$bold">
+                    Add
+                  </Text>
+                </Pressable>
+
+                <Pressable
+                  backgroundColor="$red700"
+                  p={"$2"}
+                  mt={"$2"}
+                  borderRadius={"$sm"}
+                  alignItems="center"
+                  onPress={this.toggleModal} // Close modal
+                >
+                  <Text color="$white" fontWeight="$bold">
+                    Cancel
+                  </Text>
+                </Pressable>
+              </Box>
+            </ModalFooter>
+          </ModalContent>
         </Modal>
 
-      </SafeAreaView>
-    )
+        {/* show Alert */}
+        {showAlert && (
+          <Modal isOpen={showAlert} onClose={this.toggleAlert}>
+            <ModalBackdrop />
+            <Alert mx="$4" action="error" variant="solid">
+                <AlertText fontWeight="$bold">Error!</AlertText>
+                <AlertText>{alertMessage}</AlertText>
+            </Alert>
+          </Modal>
+        )}
+      </Box>
+    );
   }
 }
 
-export default Add
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-  },
-  container: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    backgroundColor: 'white',
-    padding: 20, // Mengurangi padding agar lebih kompak
-    borderRadius: 10,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-    paddingHorizontal: 30,
-    marginHorizontal: 20
-  },
-  categoryContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  modal: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  modalInput: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 5,
-  },
-  modalButton: {
-    backgroundColor: 'blue',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  modalButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-})
+export default Add;

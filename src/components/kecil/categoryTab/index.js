@@ -1,27 +1,12 @@
 import React from 'react'
-import { Text, TouchableOpacity, StyleSheet } from 'react-native'
+import {Text, Pressable} from "@gluestack-ui/themed"
 
 const CategoryTab = ({padding, title, onPress, fontSize}) => {
   return (
-    <TouchableOpacity style={styles.container(padding)} onPress={onPress} >
-      <Text style={styles.text(fontSize)}>{title}</Text>
-    </TouchableOpacity>
+    <Pressable onPress={onPress} padding={padding} backgroundColor="$blue700" borderRadius={"$lg"}>
+      <Text color="$white" textAlign="center" fontSize={fontSize ? fontSize : "$lg"}>{title}</Text>
+    </Pressable>
   )
 }
 
-export default CategoryTab
-
-const styles = StyleSheet.create({
-  container:(padding)=>({
-      backgroundColor : 'blue',
-      padding: padding,
-      borderRadius: '50%',
-      width:100,
-      marginRight: 5
-  }),
-  text: (fontSize) => ({
-      color : 'white',
-      textAlign: 'center',
-      fontSize: fontSize ? fontSize : 13,
-  })
-})
+export default CategoryTab;

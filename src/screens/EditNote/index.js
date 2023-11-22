@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
-import { SafeAreaView, StyleSheet, View, Alert } from 'react-native'
-import { Button, Input, Pilihan } from '../../components'
-import { editNote, getNote } from '../../actions/AuthAction';
+import React, { Component } from "react";
+import { Alert, Box, Heading, Text, FormControl, Modal, ModalBackdrop, AlertText } from "@gluestack-ui/themed";
+import { Button, Input, Pilihan } from "../../components";
+import { editNote, getNote } from "../../actions/AuthAction";
 
 export class EditNote extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       title: props.route.params.judul,
@@ -13,19 +13,26 @@ export class EditNote extends Component {
       category: props.route.params.category,
       status: props.route.params.status,
       noteId: props.route.params.noteId,
-      categoryUser: []
+      categoryUser: [],
+
+      //Alert handling
+      showAlert: false,
+      alertMessage: "",
     };
   }
 
   ubahStatus = (status) => {
     this.setState({
       status: status,
-    })
+    });
+  };
 
-  }
+  toggleAlert = (message) => {
+    this.setState({ showAlert: !this.state.showAlert, alertMessage: message });
+  };
 
   async componentDidMount() {
-    this._unsubscribe = this.props.navigation.addListener('focus', async () => {
+    this._unsubscribe = this.props.navigation.addListener("focus", async () => {
       const notes = await getNote();
       const categories = notes.map((note) => note.category);
       const uniqueCategories = categories.filter((value, index, self) => {
@@ -40,94 +47,70 @@ export class EditNote extends Component {
   }
 
   onEditNote = async () => {
-    const { title, content, status, category, noteId } = this.state
+    const { title, content, status, category, noteId } = this.state;
 
     if (title && content && status && category) {
       const data = {
         title: title,
         content: content,
         status: status,
-        category: category
-      }
+        category: category,
+      };
 
-      console.log(data)
+      console.log(data);
       try {
         const user = await editNote(noteId, data);
-        this.props.navigation.replace('MainApp');
+        this.props.navigation.replace("MainApp");
       } catch (error) {
-        Alert.alert('Error', error.message);
+        console.log("Error", error.message);
+        this.toggleAlert(error.message);
       }
     } else {
-      Alert.alert('Error', 'Data tidak lengkap');
+      console.log("Error", "Data tidak lengkap");
+      this.toggleAlert("Data tidak lengkap");
     }
-  }
+  };
 
   render() {
-    const { title, content, status, category, categoryUser } = this.state
+    const { title, content, status, category, categoryUser, showAlert, alertMessage } = this.state;
     return (
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.container}>
-          <Input
-            label="Title"
-            width={200}
-            value={title}
-            onChangeText={(title) => this.setState({ title })}
-          />
-          <Input
-            textarea={true}
-            label="Content"
-            value={content}
-            onChangeText={(content) => this.setState({ content })}
-          />
-          <Pilihan
-            label="Status"
-            selectedValue={status}
-            onValueChange={(status) => this.ubahStatus(status)}
-          />
-          <Pilihan
-            label="Category"
-            selectedValue={category}
-            datas={categoryUser}
-            onValueChange={(category) => this.setState({
-              category: category,
-            })}
-          />
-          <Button
-            type="text"
-            title="Update"
-            padding={10}
-            onPress={() => { this.onEditNote() }}
-          />
-        </View>
-      </SafeAreaView>
-    )
+      <Box flex={1} backgroundColor="$white" justifyContent="center">
+        <Box shadowColor="$black" shadowOffset={{ width: 0, height: 2 }} shadowOpacity={"$25"} shadowRadius={"$3.5"} elevation={"$5"} backgroundColor="$white" borderRadius={"$md"} mt={"$8"} mx={"$3"} px={"$3"} pt={"$2"}>
+          <Heading size="2xl" color="$black">
+            Edit Your Task!
+          </Heading>
+          <Text size="sm" color="$black" my={"$1"}>
+            Having a mistake? An edit got you covered!
+          </Text>
+          <FormControl>
+            <Input label={"Title"} width={"$full"} height={"$10"}  value={title} onChangeText={(title) => this.setState({ title })} />
+            <Input textarea={true} label="Content" width={"$full"} height={"$32"} value={content} onChangeText={(content) => this.setState({ content })} />
+            <Pilihan label="Status" value={status} selectedValue={status} onValueChange={(status) => this.ubahStatus(status)} />
+            <Pilihan label="Category" selectedValue={category} datas={categoryUser} onValueChange={(selectedCategory) => this.setState({ category: selectedCategory })} />
+            <Button
+              type="text"
+              title="Update"
+              padding={10}
+              onPress={() => {
+                this.onEditNote();
+              }}
+            />
+          </FormControl>
+        </Box>
+
+        {/* show Alert */}
+        {showAlert && (
+          <Modal isOpen={showAlert} onClose={this.toggleAlert}>
+            <ModalBackdrop />
+            <Alert mx="$4" action="error" variant="solid">
+                <AlertText fontWeight="$bold">Error!</AlertText>
+                <AlertText>{alertMessage}</AlertText>
+            </Alert>
+          </Modal>
+        )}
+      </Box>
+    );
   }
 }
 
-export default EditNote
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-  },
-  container: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    backgroundColor: 'white',
-    padding: 20, // Mengurangi padding agar lebih kompak
-    borderRadius: 10,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-    paddingHorizontal: 30,
-    marginHorizontal: 20
-  }
-})
+export default EditNote;
