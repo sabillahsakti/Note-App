@@ -3,7 +3,7 @@ import { Box } from "@gluestack-ui/themed";
 
 const BottomNavigator = ({ state, descriptors, navigation }) => {
   return (
-    <Box position="absolute" left={"$0"} right={"$0"} bottom={"$0"} paddingVertical={"$8"} paddingHorizontal={"$12"} marginBottom={"$2"} marginHorizontal={"$2"} flexDirection="row" backgroundColor="$blue900" borderRadius={"$3xl"} shadowColor="$black" justifyContent="space-between" elevation={5}>
+    <Box position="absolute" left={"$0"} right={"$0"} bottom={"$0"} paddingVertical={"$8"} paddingHorizontal={"$12"} marginBottom={"$2"} marginHorizontal={"$2"} flexDirection="row" backgroundColor="$blue" hardShadow="5" borderRadius={"$3xl"} justifyContent="space-between">
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label = options.tabBarLabel !== undefined ? options.tabBarLabel : options.title !== undefined ? options.title : route.name;

@@ -36,7 +36,7 @@ const ListNote = ({ judul, isi, tanggal, status, category, noteId }) => {
         flexDirection="row"
         justifyContent="space-between"
         alignItems="center"
-        marginBottom={"$10"}
+        my={"$2"}
         px={"$5"}
         py={"$3"}
       >

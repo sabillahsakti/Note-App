@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Text, Image, VStack } from "@gluestack-ui/themed";
+import { Box, Text, Image, VStack, ScrollView } from "@gluestack-ui/themed";
 import { Button } from "../../components";
 import { clearStorage, getData } from "../../utils";
 import FIREBASE from "../../config/FIREBASE";
@@ -56,6 +56,7 @@ const Profile = ({ navigation }) => {
       marginTop={"$20"}
       flexDirection="column"
     >
+      <ScrollView>
       <VStack backgroundColor="$blueGray100" width={"$full"} mb={"$10"}>
         <Image
           source={require("../../assets/images/avatar.png")}
@@ -110,6 +111,7 @@ const Profile = ({ navigation }) => {
         padding={"$3"}
         onPress={() => onSubmit(profile)}
       />
+      </ScrollView>
     </Box>
   );
 };

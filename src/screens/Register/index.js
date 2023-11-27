@@ -10,6 +10,7 @@ import {
 } from "@gluestack-ui/themed";
 import { Input, Button } from "../../components";
 import { registerUser } from "../../actions/AuthAction";
+import BackFAB from "../../components/kecil/back_fab";
 
 const Register = ({ navigation }) => {
   const [nama, setNama] = useState("");
@@ -50,6 +51,7 @@ const Register = ({ navigation }) => {
 
   return (
     <Box flex={1} backgroundColor="$blue400" justifyContent="center">
+      <BackFAB />
       <Box
         shadowColor="$black"
         shadowOffset={{ width: 0, height: 2 }}
@@ -62,8 +64,8 @@ const Register = ({ navigation }) => {
         marginHorizontal={"$6"}
         p={"$5"}
       >
-        <Text size="3xl" color="$black">
-          Welcome
+        <Text size="3xl" color="$black" fontWeight="bold">
+          Hello~
         </Text>
         <Text size="sm" color="$black" my={"$1"}>
           Sign up to continue!

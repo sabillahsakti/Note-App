@@ -1,4 +1,4 @@
-import { Text, Image, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React, { Component } from 'react'
 import { IconLogo } from '../../assets'
 import { getData } from '../../utils/localStorage'

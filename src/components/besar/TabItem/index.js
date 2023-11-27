@@ -18,7 +18,7 @@ const TabItem = ({ isFocused, onPress, onLongPress, label }) => {
   return (
     <Pressable onPress={onPress} onLongPress={onLongPress} alignItems="center" flexDirection="column" justifyContent="space-between">
         <Icon />
-        <Text color={isFocused ? "$white" : "$warmGray500"} fontSize={"$md"} marginTop={"$2"}>{label}</Text>
+        <Text color={isFocused ? "$white" : "$lightBlue400"} fontSize={"$md"} marginTop={"$2"}>{label}</Text>
     </Pressable>
   );
 };

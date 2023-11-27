@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from "react";
-import {
-  Alert,
-  Box,
-  Heading,
-  Text,
-  FormControl,
-  Modal,
-  ModalBackdrop,
-  AlertText,
-} from "@gluestack-ui/themed";
+import { Alert, Box, Heading, Text, FormControl, Modal, ModalBackdrop, AlertText, Fab, FabLabel, FabIcon, ArrowLeftIcon, ScrollView } from "@gluestack-ui/themed";
 import { Button, Input, Pilihan } from "../../components";
 import { editNote, getNote } from "../../actions/AuthAction";
+import BackFAB from "../../components/kecil/back_fab";
+
 
 const EditNote = ({ route, navigation }) => {
   const [title, setTitle] = useState(route.params.judul);
@@ -73,19 +66,8 @@ const EditNote = ({ route, navigation }) => {
 
   return (
     <Box flex={1} backgroundColor="$white" justifyContent="center">
-      <Box
-        shadowColor="$black"
-        shadowOffset={{ width: 0, height: 2 }}
-        shadowOpacity={"$25"}
-        shadowRadius={"$3.5"}
-        elevation={"$5"}
-        backgroundColor="$white"
-        borderRadius={"$md"}
-        mt={"$8"}
-        mx={"$3"}
-        px={"$3"}
-        pt={"$2"}
-      >
+      <BackFAB />
+      <Box shadowColor="$black" shadowOffset={{ width: 0, height: 2 }} shadowOpacity={"$25"} shadowRadius={"$3.5"} elevation={"$5"} backgroundColor="$white" borderRadius={"$md"} mt={"$8"} mx={"$3"} px={"$3"} pt={"$2"}>
         <Heading size="2xl" color="$black">
           Edit Your Task!
         </Heading>
@@ -93,33 +75,10 @@ const EditNote = ({ route, navigation }) => {
           Having a mistake? An edit got you covered!
         </Text>
         <FormControl>
-          <Input
-            label={"Title"}
-            width={"$full"}
-            height={"$10"}
-            value={title}
-            onChangeText={(title) => setTitle(title)}
-          />
-          <Input
-            textarea={true}
-            label="Content"
-            width={"$full"}
-            height={"$32"}
-            value={content}
-            onChangeText={(content) => setContent(content)}
-          />
-          <Pilihan
-            label="Status"
-            value={status}
-            selectedValue={status}
-            onValueChange={(status) => ubahStatus(status)}
-          />
-          <Pilihan
-            label="Category"
-            selectedValue={category}
-            datas={categoryUser}
-            onValueChange={(selectedCategory) => setCategory(selectedCategory)}
-          />
+          <Input label={"Title"} width={"$full"} height={"$10"} value={title} onChangeText={(title) => setTitle(title)} />
+          <Input textarea={true} label="Content" width={"$full"} height={"$32"} value={content} onChangeText={(content) => setContent(content)} />
+          <Pilihan label="Status" value={status} selectedValue={status} onValueChange={(status) => ubahStatus(status)} />
+          <Pilihan label="Category" selectedValue={category} datas={categoryUser} onValueChange={(selectedCategory) => setCategory(selectedCategory)} />
           <Button
             type="text"
             title="Update"
