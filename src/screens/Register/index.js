@@ -9,46 +9,9 @@ import {
   AlertText,
 } from "@gluestack-ui/themed";
 import { Input, Button } from "../../components";
-import { registerUser } from "../../actions/AuthAction";
 import BackFAB from "../../components/kecil/back_fab";
 
 const Register = ({ navigation }) => {
-  const [nama, setNama] = useState("");
-  const [email, setEmail] = useState("");
-  const [nohp, setNohp] = useState("");
-  const [password, setPassword] = useState("");
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-
-  const toggleAlert = (message) => {
-    setShowAlert(!showAlert);
-    setAlertMessage(message);
-  };
-
-  const onRegister = async () => {
-    if (nama && email && nohp && password) {
-      const data = {
-        nama: nama,
-        email: email,
-        nohp: nohp,
-        status: "user",
-      };
-
-      console.log(data);
-
-      try {
-        const user = await registerUser(data, password);
-        navigation.replace("MainApp");
-      } catch (error) {
-        console.log("Error", error.message);
-        toggleAlert(error.message);
-      }
-    } else {
-      console.log("Error", "Data tidak lengkap");
-      toggleAlert("Data tidak lengkap");
-    }
-  };
-
   return (
     <Box flex={1} backgroundColor="$blue400" justifyContent="center">
       <BackFAB />
@@ -73,28 +36,28 @@ const Register = ({ navigation }) => {
         <FormControl>
           <Input
             label="Nama"
-            value={nama}
-            onChangeText={(nama) => setNama(nama)}
+            value={null}
+            onChangeText={() => {}}
             height={"$10"}
           />
           <Input
             label="Email"
-            value={email}
-            onChangeText={(email) => setEmail(email)}
+            value={null}
+            onChangeText={() => {}}
             height={"$10"}
           />
           <Input
             label="No. Handphone"
             keyboardType="phone-pad"
-            value={nohp}
-            onChangeText={(nohp) => setNohp(nohp)}
+            value={null}
+            onChangeText={() => {}}
             height={"$10"}
           />
           <Input
             label="Password"
             secureTextEntry
-            value={password}
-            onChangeText={(password) => setPassword(password)}
+            value={null}
+            onChangeText={() => {}}
             height={"$10"}
           />
         </FormControl>
@@ -106,22 +69,11 @@ const Register = ({ navigation }) => {
             padding={"$3"}
             fontSize={"$md"}
             onPress={() => {
-              onRegister();
+              navigation.navigate("Login");
             }}
           />
         </Box>
       </Box>
-
-      {/* show Alert */}
-      {showAlert && (
-        <Modal isOpen={showAlert} onClose={() => toggleAlert()}>
-          <ModalBackdrop />
-          <Alert mx="$4" action="error" variant="solid">
-            <AlertText fontWeight="$bold">Error!</AlertText>
-            <AlertText>{alertMessage}</AlertText>
-          </Alert>
-        </Modal>
-      )}
     </Box>
   );
 };

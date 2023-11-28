@@ -1,33 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Box, FlatList } from "@gluestack-ui/themed";
 import { CategoryTab, ListNote } from "../../components";
-import { getNote } from "../../actions/AuthAction";
 
 const Home = ({ navigation }) => {
-  const [userNotes, setUserNotes] = useState([]);
-  const [category, setCategory] = useState([]);
+  const [userNotes, setUserNotes] = useState([
+    { noteId: 1, title: 'Note 1', content: 'Lorem ipsum...', status: 'Active', category: 'Work' },
+    { noteId: 2, title: 'Note 2', content: 'Lorem ipsum...', status: 'Inactive', category: 'Personal' },
+    { noteId: 3, title: 'Note 3', content: 'Lorem ipsum...', status: 'Active', category: 'Work' },
+    { noteId: 4, title: 'Note 4', content: 'Lorem ipsum...', status: 'Active', category: 'Study' },
+    // Add more dummy notes as needed
+  ]);
+  const [category, setCategory] = useState(['Work', 'Personal', 'Study', 'Others']); // Replace with your desired categories
   const [selectedCategory, setSelectedCategory] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const notes = await getNote();
-      const categories = notes.map((note) => note.category);
-      const uniqueCategories = Array.from(new Set(categories));
-      setUserNotes(notes);
-      setCategory(uniqueCategories);
-    };
-
-    const unsubscribe = navigation.addListener("focus", fetchData);
-
-    return () => {
-      unsubscribe();
-    };
-  }, [navigation]);
 
   const onCategoryPress = (selectedCategory) => {
     setSelectedCategory(selectedCategory);
   };
-
+  
   const filteredNotes = selectedCategory ? userNotes.filter((note) => note.category === selectedCategory) : userNotes;
 
   return (
