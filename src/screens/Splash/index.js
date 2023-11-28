@@ -4,7 +4,9 @@ import { IconLogo } from "../../assets";
 
 export default class Splash extends Component {
   componentDidMount() {
-    setTimeout(this.props.navigation.replace("Login"), 3000);
+    setTimeout(() => {
+      this.props.navigation.navigate('Login');
+    }, 3000)
   }
 
   render() {
